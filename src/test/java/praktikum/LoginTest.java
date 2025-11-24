@@ -48,9 +48,11 @@ public class LoginTest extends BaseUiTest {
     }
 
     private void assertLoggedIn(WebDriver d) {
-        assertTrue("Ожидалась главная страница после логина",
-                d.getCurrentUrl().contains("/"));
+        MainPage main = new MainPage(d);
+        assertTrue("Ожидалась главная страница конструктора после логина",
+                main.isConstructorOpened());
     }
+
 
     @Test
     @DisplayName("Вход по кнопке 'Войти в аккаунт' на главной")
@@ -63,7 +65,7 @@ public class LoginTest extends BaseUiTest {
         LoginPage login = new LoginPage(d);
         login.login(email, password);
 
-        assertLoggedIn(d);
+        assertLoggedIn(driver);
     }
 
     @Test
@@ -76,7 +78,7 @@ public class LoginTest extends BaseUiTest {
         LoginPage login = new LoginPage(d);
         login.login(email, password);
 
-        assertLoggedIn(d);
+        assertLoggedIn(driver);
     }
 
     @Test
@@ -94,7 +96,7 @@ public class LoginTest extends BaseUiTest {
 
         login.login(email, password);
 
-        assertLoggedIn(d);
+        assertLoggedIn(driver);
     }
 
     @Test
@@ -112,6 +114,34 @@ public class LoginTest extends BaseUiTest {
 
         login.login(email, password);
 
-        assertLoggedIn(d);
+        assertLoggedIn(driver);
     }
+
+    @Test
+    @DisplayName("Логин с неверным логином и паролем")
+    @Description("При вводе неверных учетных данных вход в систему невозможен")
+    public void loginWithWrongCredentials() {
+        WebDriver d = driver;
+
+        // 1. Открываем главную и жмём "Войти в аккаунт"
+        MainPage main = new MainPage(d);
+        main.clickLoginAccount();
+
+        // 2. Переходим на форму логина
+        LoginPage login = new LoginPage(d);
+
+        // 3. Вводим заведомо неверные данные
+        String wrongEmail = "wrong" + System.currentTimeMillis() + "@example.com";
+        String wrongPassword = "wrongPass";
+        login.login(wrongEmail, wrongPassword);
+
+        // 4. Проверяем, что мы всё ещё на странице входа
+
+        assertTrue("Ожидалась страница входа при неверных учетных данных",
+                login.isLoginHeaderVisible());
+    }
+
+
 }
+
+

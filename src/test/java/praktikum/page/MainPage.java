@@ -28,6 +28,16 @@ public class MainPage extends BasePage {
     private final By saucesHeader = By.xpath("//h2[text()='Соусы']");
     private final By fillingsHeader = By.xpath("//h2[text()='Начинки']");
 
+    // Заголовок конструктора на главной
+    private final By constructorHeader = By.xpath("//h1[text()='Соберите бургер']");
+
+    //Проверка, что открыта главная страница конструктора
+
+    public boolean isConstructorOpened() {
+        return find(constructorHeader).isDisplayed();
+    }
+
+
     public MainPage(WebDriver driver) {
         super(driver);
     }
@@ -67,15 +77,20 @@ public class MainPage extends BasePage {
         click(fillingsTab);
     }
 
+    private boolean isTabActive(By tabLocator) {
+        String classes = find(tabLocator).getAttribute("class");
+        return classes != null && classes.contains("tab_tab_type_current");
+    }
+
     public boolean isBunsSectionVisible() {
-        return find(bunsHeader).isDisplayed();
+        return isTabActive(bunsTab);
     }
 
     public boolean isSaucesSectionVisible() {
-        return find(saucesHeader).isDisplayed();
+        return isTabActive(saucesTab);
     }
 
     public boolean isFillingsSectionVisible() {
-        return find(fillingsHeader).isDisplayed();
+        return isTabActive(fillingsTab);
     }
 }

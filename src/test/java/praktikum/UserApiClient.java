@@ -11,6 +11,7 @@ public class UserApiClient {
 
     private static final String BASE_URL = "https://stellarburgers.education-services.ru";
     private static final String REGISTER_PATH = "/api/auth/register";
+    private static final String LOGIN_PATH = "/api/auth/login";
     private static final String USER_PATH = "/api/auth/user";
 
     static {
@@ -28,6 +29,17 @@ public class UserApiClient {
                 .then();
     }
 
+    @Step("Залогинить пользователя через API: {user.email}")
+    public ValidatableResponse loginUser(UserApi user) {          // <--- НОВЫЙ МЕТОД
+        return given()
+                .filter(new AllureRestAssured())
+                .header("Content-Type", "application/json")
+                .body(user)
+                .when()
+                .post(LOGIN_PATH)
+                .then();
+    }
+
     @Step("Удалить тестового пользователя через API")
     public void deleteUser(String accessToken) {
         if (accessToken == null) {
@@ -40,6 +52,8 @@ public class UserApiClient {
                 .when()
                 .delete(USER_PATH)
                 .then()
-                .statusCode(202); // можно ослабить до any
+                .statusCode(202);
     }
+
+
 }

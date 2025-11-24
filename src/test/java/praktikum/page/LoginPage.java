@@ -19,6 +19,7 @@ public class LoginPage extends BasePage {
         super(driver);
     }
 
+
     @Step("Авторизоваться пользователем {email}")
     public void login(String email, String password) {
         type(emailInput, email);
@@ -40,3 +41,5 @@ public class LoginPage extends BasePage {
         return find(headerLogin).isDisplayed();
     }
 }
+
+

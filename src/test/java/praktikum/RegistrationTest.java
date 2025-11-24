@@ -38,29 +38,40 @@ public class RegistrationTest extends BaseUiTest {
 
     @Test
     @DisplayName("Успешная регистрация")
-    @Description("Пользователь с валидными данными может зарегистрироваться")
+    @Description("Пользователь с валидными данными может зарегистрироваться и войти в систему")
     public void successfulRegistration() {
         WebDriver d = driver;
         MainPage main = new MainPage(d);
-        main.clickLoginAccount();           // "Войти в аккаунт"
+        main.clickLoginAccount();           // "Войти в аккаунт" на главной
 
         LoginPage login = new LoginPage(d);
-        login.goToRegister();               // "Зарегистрироваться"
+        login.goToRegister();               // ссылка "Зарегистрироваться"
 
         RegisterPage register = new RegisterPage(d);
         String email = "user" + System.currentTimeMillis() + "@example.com";
         String password = "password123";
+
+        // Шаг 1: регистрируемся через UI
         register.register("Vasya", email, password);
 
-        // после успешной регистрации нас перекидывает на страницу входа
+        // После успешной регистрации мы действительно на странице входа
         assertTrue("Ожидалась страница входа после регистрации",
-                new LoginPage(d).isLoginHeaderVisible());
+                login.isLoginHeaderVisible());
 
-        // через API залогинимся, чтобы получить токен для удаления пользователя
+        // Шаг 2: логинимся через UI
+        login.login(email, password);
+
+        // Шаг 3: проверяем, что открылась главная страница конструктора
+        MainPage mainAfterLogin = new MainPage(d);
+        assertTrue("После регистрации и логина ожидается главная страница конструктора",
+                mainAfterLogin.isConstructorOpened());
+
+        // Шаг 4: через API берём токен для удаления пользователя
         UserApi user = new UserApi(email, password, "Vasya");
-        accessToken = userApiClient.createUser(user)
+        accessToken = userApiClient.loginUser(user)
                 .extract().path("accessToken");
     }
+
 
     @Test
     @DisplayName("Ошибка при некорректном пароле")
@@ -82,6 +93,5 @@ public class RegistrationTest extends BaseUiTest {
         assertTrue("Ожидалось сообщение об ошибке 'Некорректный пароль'",
                 register.isPasswordErrorVisible());
 
-        // пользователя не создаём => accessToken не будет
     }
 }

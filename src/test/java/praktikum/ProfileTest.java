@@ -63,11 +63,13 @@ public class ProfileTest extends BaseUiTest {
         main.clickPersonalAccount();
 
         ProfilePage profile = new ProfilePage(d);
-        assertTrue("Ожидалась страница профиля", profile.isProfilePageOpened());
+        assertTrue("Ожидалась страница профиля",
+                profile.isProfilePageOpened());
     }
 
     @Test
     @DisplayName("Переход из личного кабинета в конструктор по кнопке 'Конструктор'")
+    @Description("Из личного кабинета можно перейти в конструктор по кнопке 'Конструктор'")
     public void goFromProfileToConstructorByButton() {
         WebDriver d = driver;
         MainPage main = new MainPage(d);
@@ -76,12 +78,14 @@ public class ProfileTest extends BaseUiTest {
         ProfilePage profile = new ProfilePage(d);
         profile.clickConstructor();
 
+        MainPage mainAfter = new MainPage(d);
         assertTrue("Ожидалась главная страница конструктора",
-                d.getCurrentUrl().endsWith("/"));
+                mainAfter.isConstructorOpened());
     }
 
     @Test
     @DisplayName("Переход из личного кабинета в конструктор по логотипу")
+    @Description("Из личного кабинета можно перейти в конструктор по клику на логотип")
     public void goFromProfileToConstructorByLogo() {
         WebDriver d = driver;
         MainPage main = new MainPage(d);
@@ -90,11 +94,14 @@ public class ProfileTest extends BaseUiTest {
         ProfilePage profile = new ProfilePage(d);
         profile.clickLogo();
 
-        assertTrue(d.getCurrentUrl().endsWith("/"));
+        MainPage mainAfter = new MainPage(d);
+        assertTrue("Ожидалась главная страница конструктора",
+                mainAfter.isConstructorOpened());
     }
 
     @Test
     @DisplayName("Выход из аккаунта по кнопке 'Выйти'")
+    @Description("Авторизованный пользователь может выйти из аккаунта из личного кабинета")
     public void logoutFromProfile() {
         WebDriver d = driver;
         MainPage main = new MainPage(d);

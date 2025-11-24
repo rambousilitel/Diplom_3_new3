@@ -20,7 +20,7 @@ public class WebDriverFactory {
                 WebDriverManager.chromedriver().setup();
                 ChromeOptions options = new ChromeOptions();
 
-п                options.setBinary("C:\\Users\\jops1\\AppData\\Local\\Yandex\\YandexBrowser\\Application\\browser.exe");
+                options.setBinary("C:\\Users\\jops1\\AppData\\Local\\Yandex\\YandexBrowser\\Application\\browser.exe");
 
                 System.setProperty("webdriver.chrome.driver", "D:\\yandexdriver.exe");
 
